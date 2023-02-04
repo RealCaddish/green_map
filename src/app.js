@@ -44,7 +44,7 @@ function drawMap(data) {
   tiles.addTo(map);
 
   // add data after Promise
-  const countries = data[0];
+  var countries = data[0];
 
 
   // add countries polygons with cbd data
@@ -52,9 +52,44 @@ function drawMap(data) {
   })
     .bringToFront()
     .addTo(map)
-  
 
-  console.log(countries)
+  console.log(cbdCountries)
+  //L.geoJson(cbdCountries, {style: style}).addTo(map); 
+
+  //style function for GeoJSON layer so fillColor depends on feature.properties.density
+  // also addeing dashed stroke for styling
+
+  function style(feature) {
+    return {
+      fillColor: getColor(feature.properties.THC_level),
+      weight: 2,
+      color: getColor(feature.properties.THC_level),
+      opacity: 1,
+      color: 'white',
+      dashArray: '3',
+      fillOpacity: 0.7
+    }
+  }
+
+
+  // end of drawMap function
+
+  getColor();
+  style(cbdCountries)
 }
 
 
+// colors set for chloropleth of CBD THC levels 
+function getColor(d) {
+  return d > 0.2 ? '#80026' :
+    d > 0.3 ? '#BD0026' :
+      d > 0.4 ? '#E31A1C' :
+        d > 0.5 ? '#FC4E2A' :
+          d > 0.6 ? '#FD8D3C' :
+            d > 0.7 ? '#FEB24C' :
+              d > 0.8 ? '#FED976' :
+                '#FFEDA0';
+
+
+
+}
